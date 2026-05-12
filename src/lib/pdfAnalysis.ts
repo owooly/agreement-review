@@ -1,4 +1,5 @@
 import * as pdfjs from "pdfjs-dist";
+import type { TextContent, TextItem } from "pdfjs-dist/types/src/display/api";
 import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import { leftHighlightRanges, rightHighlightRanges } from "./diffRanges";
 
@@ -28,7 +29,7 @@ type TextPiece = {
 };
 
 function itemViewportRect(
-  item: pdfjs.TextItem,
+  item: TextItem,
   viewport: pdfjs.PageViewport,
 ): PdfRect | null {
   if (!item.str) return null;
@@ -48,14 +49,14 @@ function itemViewportRect(
 }
 
 function collectTextPieces(
-  textContent: pdfjs.TextContent,
+  textContent: TextContent,
   viewport: pdfjs.PageViewport,
 ): TextPiece[] {
   const pieces: TextPiece[] = [];
   let offset = 0;
   for (const raw of textContent.items) {
     if (!("str" in raw)) continue;
-    const item = raw as pdfjs.TextItem;
+    const item = raw as TextItem;
     const str = item.str;
     if (!str) continue;
     const rect = itemViewportRect(item, viewport);
